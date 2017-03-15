@@ -6,6 +6,8 @@
 package Dao;
 
 import entidade.Usuario;
+import java.util.List;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -32,5 +34,47 @@ public class UsuarioDao {
            sessao.close();
         }
     }
-    
+  public List<Usuario> listar(){
+      
+      Session sessao = HibernateUtil.getSessionFactory().openSession();
+      List<Usuario> usuarios = null;
+      
+      try {
+          Query consulta = sessao.getNamedQuery("Usuario.listar");
+          usuarios = consulta.list();
+      } catch (RuntimeException e) {
+          throw new RuntimeException(e);
+                  
+      }finally{
+          sessao.close();
+      }
+      return usuarios;
+  }
+  public Usuario buscar(String email){
+      Session sessao = HibernateUtil.getSessionFactory().openSession();
+      Usuario usu = null;
+      try {
+          Query consulta = sessao.getNamedQuery("Usuario.buscarPorEmail");
+          consulta.setString("email", email);
+          usu = (Usuario) consulta.uniqueResult();
+      } catch (RuntimeException e) {
+          throw e;
+      }
+      return usu;
+  }
+  public Usuario login(String email, String senha){
+      Session sessao = HibernateUtil.getSessionFactory().openSession();
+      Usuario usu = null;
+      try {
+          Query consulta = sessao.getNamedQuery("buscarEmailSenha");
+          consulta.setString("email", senha);
+          consulta.setString("senha", senha);
+          usu = (Usuario) consulta.uniqueResult();
+      } catch (RuntimeException e) {
+          throw e;
+      }finally{
+          sessao.close();
+      }
+      return usu;
+  }
 }

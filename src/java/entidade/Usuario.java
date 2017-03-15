@@ -10,12 +10,19 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import org.hibernate.annotations.NamedQueries;
+import org.hibernate.annotations.NamedQuery;
 
 /**
  *
  * @author everton
  */
 @Entity
+@NamedQueries({
+    @NamedQuery(name = "Usuario.listar",query = "SELECT usuario FROM Usuario usuario"),
+    @NamedQuery(name = "Usuario.buscarPorEmail", query = "SELECT usuario FROM Usuario usuario WHERE usuario.email=:email"),
+    @NamedQuery(name = "Usuario.buscarEmailSenha", query = "SELECT usuario FROM Usuario usuario WHERE usuario.email, usuario.senha=:email,senha")
+})//TODO find bug in namedQuery 
 public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
